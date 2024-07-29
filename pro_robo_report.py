@@ -178,12 +178,12 @@ class RobotCar():
     """
     def DeadReckoning(self, mps, phi):
         dot_theta = math.tan(phi) * mps / self.car.getWheelbase() # 角度の変化
-        self.theta += dot_theta * self.TIME_STEP / 1000 # 角度の変化 ステップ時間で積分する
+        self.theta += dot_theta * self.TIME_STEP / 1000 # 車体の角度 ステップ時間で積分する
         self.v_x = mps * math.cos(self.theta) # x方向の速度
         self.v_y = mps * math.sin(self.theta) # y方向の速度
         # print("velocity:%.2f, %.2f, %.2f " % (self.v_x, self.v_y, dot_theta), end='')
-        self.pos_x += self.v_x * self.TIME_STEP / 1000 #
-        self.pos_y += self.v_y * self.TIME_STEP / 1000
+        self.pos_x += self.v_x * self.TIME_STEP / 1000 # 車体のx座標 ステップ時間で積分する
+        self.pos_y += self.v_y * self.TIME_STEP / 1000 # 車体のy座標 ステップ時間で積分する
         return self.pos_x, self.pos_y, self.theta
 
     """ レンジイメージの表示 """
