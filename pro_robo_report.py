@@ -174,15 +174,15 @@ class RobotCar():
                 return self.UNKNOWN, self.UNKNOWN
 
     """
-    でどれこ
+    Dead Reckoningの計算
     """
     def DeadReckoning(self, mps, phi):
         dot_theta = math.tan(phi) * mps / self.car.getWheelbase() # 角度の変化
-        self.theta += dot_theta * self.TIME_STEP / 1000 # 角度の変化
+        self.theta += dot_theta * self.TIME_STEP / 1000 # 角度の変化 ステップ時間で積分する
         self.v_x = mps * math.cos(self.theta) # x方向の速度
         self.v_y = mps * math.sin(self.theta) # y方向の速度
         # print("velocity:%.2f, %.2f, %.2f " % (self.v_x, self.v_y, dot_theta), end='')
-        self.pos_x += self.v_x * self.TIME_STEP / 1000
+        self.pos_x += self.v_x * self.TIME_STEP / 1000 #
         self.pos_y += self.v_y * self.TIME_STEP / 1000
         return self.pos_x, self.pos_y, self.theta
 
@@ -237,6 +237,7 @@ class RobotCar():
 
                 dead_values = self.DeadReckoning(kmph * 1000 / 3600 , self.driver.getSteeringAngle()) # デッドレコニングの計算
 
+                # print()関数を用いてデッドレコニングとGPS，誤差の数値を出力する
                 print("%f,%f,%f," % (dead_values[0], dead_values[1], dead_values[2]), end='')
                 print("%f,%f,%f," % (gps_values[0], gps_values[1], gps_values[2]), end='')
                 print("%f,%f" % ((dead_values[0] + gps_values[0])/(-gps_values[0]), (dead_values[1] - gps_values[1])/gps_values[1]))
@@ -253,7 +254,7 @@ class RobotCar():
                 if obstacle_dist < STOP_DIST:
                     # print("%d:Find obstacles(angle=%g, dist=%g)" % (step, obstacle_angle, obstacle_dist))
                     # stop = True
-                    self.driver.setSteeringAngle(math.pi/6) # 障害物を検出したので停止する．
+                    self.driver.setSteeringAngle(math.pi/6) # 障害物を検出したとき指定角度にステアリングを切る
 
                 else:                
                     # 操作量（ステアリング角度）の計算
